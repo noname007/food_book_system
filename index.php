@@ -1,75 +1,144 @@
-<?php header('content-type:text/html;charset=utf-8')?>
+<?php 
+	header('content-type:text/html;charset=utf-8'); 
+	const DATAFILEFOLD ='./data';
+	const PREFIX_FOODID = 'food_id';
+	const PREFIX_ORDERID='orderid';
+?>
 <form method='post'>
-	<p><input type="radio" value='1' name='food_id'>酸菜盖饭</p>
- 	<p> <input type="hidden" value='酸菜盖饭' name='food_name'> </p>
-	<?php food_kinds(array(array('id'=>2,'name'=>"土豆丝"))) ?>
+	<!-- <p><input type="radio" value='1' name='food_id'>酸菜盖饭</p> -->
+ 	<!-- <p> <input type="hidden" value='酸菜盖饭' name='food_name'> </p> -->
+	<?php food_kinds(read_foods()) ?>
 	
 	<p><input type="submit" name='sub' value="提交"></p>
 </form>
 
 <?php
+	//存储传递用json ，程序操作用数组
 	// echo 1;
-	print_r($_POST);
-	const DATAFILEFOLD ='./data';
-
-	if( isset($_POST['sub']))
+	// print_r($_POST);
+	if(isset($_REQUEST['food_id']))
 	{
 		// var_dump($_POST);
-		$post = $_POST;
+		$post = $_REQUEST;
 		unset($post['sub']);		
 		save_orders($post);
 		show_orders();
+		echo total_money()." RMB";
+	}
+	else if(isset($_REQUEST['sub']))
+	{
+		echo '怎么也得选一个菜吧。。。。！';
 	}
 
 	function food_kinds(array $foods)
 	{
 		foreach ($foods as $food) {
-			echo '<p><input type="radio" value="'.$food['id'].'" name="food_id">'.$food['name'].'</p>';
-			echo '<p> <input type="hidden" value="'.$food['name'].'" name="food_name"> </p>';
+			echo '<p><input type="radio" value="'.$food['food_id'].'" name="food_id"> | '.$food['food_name'].' | '.$food['pirce'].' RMB</p>';
 		}
 	}
 
-	function insert_food_kind($foodinfo)
+	function read_foods($id='')
 	{
-		write2file(DATAFILEFOLD.'/foods.txt',$foodinfo);
-	}
 	
-	function read_foods()
-	{
-		$str = file_get_contents(DATAFILEFOLD.'/foods.txt');
-		explode('\n', $str);
+		$str = file_get_contents(DATAFILEFOLD.'/foods.txt');			
+		// echo $str;
+		$food_arr = explode("\n", $str);
+		$res = array();
+		foreach ($food_arr as  $value) 
+		{
+				if(empty($value))
+				{
+					continue;
+				}
+				$temp = json_decode($value,1);
+
+				$temp = each(json_decode($value,1));
+				$order = $temp['value'];
+				$res[$order['food_id']] = $order;
+
+		}
+		// var_dump($res);
 		
+		if(empty($id)){
+			return $res;
+		}
+		else if(isset($res[$id]))
+		{
+
+			return $res[$id];
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function read_orders()
+	{
+		$str = file_get_contents(DATAFILEFOLD.'/orders.txt');
+		$json_format_orders = explode("\n",$str);
+
+		foreach ($json_format_orders as $order_json_format) {		
+			if($order_json_format)
+				$data_arr[] = json_decode($order_json_format,1);
+		}
+
+		return $data_arr;
+		// show_table($data_arr);
 	}
 
 	function save_orders($post)
 	{
-		$post['timestamp']=date('Y-m-d H-i-s');
+		date_default_timezone_set('PRC');
+		$post['timestamp']=date('Y-m-d H:i:s');
+		$orderid = mt_rand(0,10000).time($post['timestamp']);
+		echo $post['food_id'];
+		$tem = (read_foods($post['food_id']));
+		echo $tem['pirce'];
+		$post['pirce'] = $tem['pirce'];
+		$post['food_name'] = $tem['food_name'];
+		$post['order_id'] = PREFIX_ORDERID.$orderid;
 		order2file(json_encode($post));
 	}
 
 	function show_orders()
 	{
-		$str = file_get_contents(DATAFILEFOLD.'/orders.txt');
-		$json_orders = explode("\n",$str);
-		//var_dump($json_orders);
-		$table = '<table><caption>订单</caption>';
-		foreach ($json_orders as &$value) {
-			if(!empty($value) && ($data_arr = json_decode($value,1)))
-			{	
-				// echo '<p>'.$value."</p><br/>";
-				// var_dump($data_arr);
-				$table .= '<tr>';
-				//print_r($data_arr);
-				foreach ($data_arr as $field) {
-					
-					$table .= '<td>'.$field.'</td>'	;
-				}
-
-				$table .='</tr>';
-			}
+		$orders = read_orders();
+		// var_dump($orders);
+		foreach ($orders as &$order) {
+			unset($order['food_id']);
 		}
-		$table .= '</table>';
-		echo $table;
+		// var_dump()
+		show_table($orders,'订单');
+	
+		//var_dump($json_orders);
+		// $table = '<table><caption>订单</caption>';
+		// foreach ($json_orders as &$value) {
+		// 	if(!empty($value) && ($data_arr = json_decode($value,1)))
+		// 	{	
+		// 		// echo '<p>'.$value."</p><br/>";
+		// 		// var_dump($data_arr);
+		// 		$table .= '<tr>';
+		// 		//print_r($data_arr);
+		// 		foreach ($data_arr as $field) {
+					
+		// 			$table .= '<td>'.$field.'</td>'	;
+		// 		}
+
+		// 		$table .='</tr>';
+		// 	}
+		// }
+		// $table .= '</table>';
+		// echo $table;
+	}
+	function total_money()
+	{
+		$sum = 0;
+		$orders = read_orders();
+		foreach ($orders as & $value) {
+			$sum += $value['pirce'];
+		}
+		return $sum;
 	}
 	// function insert_food_kind(array $food)
 	// {
@@ -99,4 +168,34 @@
 		$handle = fopen($filename,'a+');
 		fwrite($handle, $data.PHP_EOL);
 		fclose($handle);
+	}
+
+	function show_table($data,$name,$field_name='')
+	{
+		// var_dump($data);
+		$table = '<hr/><table><caption>订单</caption>';
+		
+		if(is_array($field_name))
+		{
+			foreach($field_name as $value)
+			{
+				$table .= '<td>'.$value.'</td>';
+			}
+		}
+
+		
+		foreach ($data as $value) {
+	
+			$table .= '<tr>';
+
+			foreach ($value as $field) {
+				$table .= '<td>'.$field.'</td>'	;
+			}
+
+			$table .='</tr>';
+		}
+
+		$table .= '</table>';
+		
+		echo $table;
 	}
