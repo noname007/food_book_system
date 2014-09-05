@@ -8,7 +8,7 @@
 	<!-- <p><input type="radio" value='1' name='food_id'>酸菜盖饭</p> -->
  	<!-- <p> <input type="hidden" value='酸菜盖饭' name='food_name'> </p> -->
 	<?php food_kinds(read_foods()) ?>
-	
+	<p>姓名<input type="text" name="username" value=""></p>
 	<p><input type="submit" name='sub' value="提交"></p>
 </form>
 
@@ -92,9 +92,9 @@
 		date_default_timezone_set('PRC');
 		$post['timestamp']=date('Y-m-d H:i:s');
 		$orderid = mt_rand(0,10000).time($post['timestamp']);
-		echo $post['food_id'];
+		// echo $post['food_id'];
 		$tem = (read_foods($post['food_id']));
-		echo $tem['pirce'];
+		// echo $tem['pirce'];
 		$post['pirce'] = $tem['pirce'];
 		$post['food_name'] = $tem['food_name'];
 		$post['order_id'] = PREFIX_ORDERID.$orderid;
@@ -106,7 +106,12 @@
 		$orders = read_orders();
 		// var_dump($orders);
 		foreach ($orders as &$order) {
+			if(empty($order['username']))
+			{
+				$order['username'] = '无名氏';
+			}
 			unset($order['food_id']);
+			unset($order['order_id']);
 		}
 		// var_dump()
 		show_table($orders,'订单');
