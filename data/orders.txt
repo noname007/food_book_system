@@ -1,0 +1,14 @@
+{"food_id":"1","food_name":"\u9178\u83dc\u76d6\u996d","timestamp":"2014-09-05 07-41-05"}
+{"food_id":"1","food_name":"\u9178\u83dc\u76d6\u996d","timestamp":"2014-09-05 07-41-09"}
+{"food_id":"1","food_name":"\u9178\u83dc\u76d6\u996d","timestamp":"2014-09-05 07-41-11"}
+{"food_id":"1","food_name":"\u9178\u83dc\u76d6\u996d","timestamp":"2014-09-05 07-41-25"}
+{"food_name":"\u571f\u8c46\u4e1d","food_id":"2","timestamp":"2014-09-05 07-41-28"}
+{"food_name":"\u571f\u8c46\u4e1d","food_id":"2","timestamp":"2014-09-05 07-42-09"}
+{"food_id":"1","food_name":"\u571f\u8c46\u4e1d","timestamp":"2014-09-05 07-42-15"}
+{"food_name":"\u571f\u8c46\u4e1d","food_id":"2","timestamp":"2014-09-05 07-42-18"}
+{"food_id":"1","food_name":"\u571f\u8c46\u4e1d","timestamp":"2014-09-05 07-42-21"}
+{"food_id":"1","food_name":"\u571f\u8c46\u4e1d","timestamp":"2014-09-05 07-42-26"}
+{"food_name":"\u571f\u8c46\u4e1d","food_id":"2","timestamp":"2014-09-05 07-42-31"}
+{"food_id":"1","food_name":"\u571f\u8c46\u4e1d","timestamp":"2014-09-05 07-43-31"}
+{"food_name":"\u571f\u8c46\u4e1d","food_id":"2","timestamp":"2014-09-05 07-43-34"}
+{"food_id":"1","food_name":"\u571f\u8c46\u4e1d","timestamp":"2014-09-05 07-44-34"}
