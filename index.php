@@ -75,7 +75,7 @@
 
 	function read_orders()
 	{
-		$str = file_get_contents(DATAFILEFOLD.'/orders.txt');
+		$str = file_get_contents(DATAFILEFOLD.'/orders'.date('Y-m-d').'.txt');
 		$json_format_orders = explode("\n",$str);
 
 		foreach ($json_format_orders as $order_json_format) {		
@@ -98,6 +98,7 @@
 		$post['pirce'] = $tem['pirce'];
 		$post['food_name'] = $tem['food_name'];
 		$post['order_id'] = PREFIX_ORDERID.$orderid;
+		// $post['ip']=$_SERVER['IP']
 		order2file(json_encode($post));
 	}
 
@@ -164,7 +165,7 @@
 
 	function order2file($orderinfo)
 	{
-		write2file(DATAFILEFOLD.'/orders.txt',$orderinfo);
+		write2file(DATAFILEFOLD.'/orders'.date('Y-m-d').'.txt',$orderinfo);
 	}
 
 	function write2file($filename,$data)

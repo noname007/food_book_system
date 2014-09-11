@@ -1,9 +1,0 @@
-{"food_id":"1409911776","timestamp":"2014-09-05 19:08:18","pirce":"13","food_name":"\u5730\u4e09\u9c9c","order_id":"orderid1991409915298"}
-{"food_id":"1409911776","timestamp":"2014-09-05 19:08:50","pirce":"13","food_name":"\u5730\u4e09\u9c9c","order_id":"orderid44211409915330"}
-{"food_id":"1409911336","timestamp":"2014-09-05 19:08:53","pirce":"12.3","food_name":"\u571f\u8c46\u4e1d","order_id":"orderid3261409915333"}
-{"food_id":"1409911776","timestamp":"2014-09-05 19:08:56","pirce":"13","food_name":"\u5730\u4e09\u9c9c","order_id":"orderid8261409915336"}
-{"food_id":"1409911766","timestamp":"2014-09-05 19:08:58","pirce":"15.7","food_name":"\u7ea2\u70e7\u725b\u8089","order_id":"orderid60171409915338"}
-{"food_id":"1409911776","timestamp":"2014-09-05 19:09:13","pirce":"13","food_name":"\u5730\u4e09\u9c9c","order_id":"orderid77161409915353"}
-{"food_id":"1409911336","timestamp":"2014-09-05 19:09:21","pirce":"12.3","food_name":"\u571f\u8c46\u4e1d","order_id":"orderid88831409915361"}
-{"food_id":"1409911776","timestamp":"2014-09-05 19:09:25","pirce":"13","food_name":"\u5730\u4e09\u9c9c","order_id":"orderid46221409915365"}
-{"food_id":"1409911766","timestamp":"2014-09-05 19:09:30","pirce":"15.7","food_name":"\u7ea2\u70e7\u725b\u8089","order_id":"orderid11131409915370"}
