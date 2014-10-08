@@ -1,7 +1,8 @@
 <?php
-	
+	// header('Content-type:text/html;charset=utf8');
+	header("Content-type:text/json;charset=utf-8");
 	require_once "./httpRequest.php";
-	
+	$test_url = "http://waimai.baidu.com/waimai/shop/18062509820316987430";
 
 	$res =  httpRequest::get_method($test_url);
 	// file_put_contents('1', $res);
@@ -14,10 +15,52 @@
 	// {
 	// 	echo 'fail 2 load html';
 	// }
-	// preg_match_all('/^<li class(.|\n)*<\/li>$/', $res,$result);
-
-	// var_dump($result);
+	// preg_match('`<li class="list-item"[\s\S]*\s</li>`', $res,$result);
+	// // preg_match_all('/(.|[u4e00-u9fa5]])*/', $res,$result);
+	// file_put_contents('2', json_encode($result));
+	// echo htmlspecialchars(json_encode(($result)));
+	// // print_r($result);
+	// $po = strpos('li class="list-item"', $res);
+	// strpos('id', substr($res,$po))
+	// echo substr($res,strpos('data=',substr($res,$po)),);
 	
+
+	// $res = substr($res,strpos('<section class="menu-list">',$res));
+	// echo $res;
+
+	while($data_pos =strpos($res,'<li class="list-item" data="'))
+	{
+		$data_pos +=strlen('<li class="list-item" data="');
+		// echo $data_pos;
+		// var_dump($data_pos);
+	    $res = substr($res, $data_pos);
+	    // echo $res."\n";
+	    // substr(string, start)
+	    // var_dump($res);
+	    // exit ;
+	    $id_pos = strpos($res,'" id');
+	    // echo $id_pos;
+	    // $start = ;
+	    // $start = 0;
+	    // echo $start,' ',$id_pos;
+	    // $res =  substr($res, $start);
+	    $key= substr($res, 0, $id_pos);
+	    $data_src_pos = strpos($res,'data-src="')+ strlen('data-src="');
+	    $src_pos = strpos($res,'" src');
+	    $imgs[$key] =  substr($res, $data_src_pos, $src_pos - $data_src_pos);
+	}
+	foreach ($imgs as $data => $img) {
+		$res= explode('$',$data);
+		//var_dump($res);
+	}
+
+
+
+	// var_dump($img);
+	// var_dump($data);
+	// $data_title_pos = 'data-title=';
+	// $data_src_pos = 'data-src=';
+
 	class Order
 	{
 
@@ -35,7 +78,7 @@
 			$li_len = 0;
 			$end = 0;	
 
-			while($)
+			// while($)
 			{
 				$res = substr($res,$end + $li_len);
 				$li_len = strlen('</li>');
