@@ -1,12 +1,16 @@
 <?php header('content-type:text/html;charset=utf-8');?>
 
-<form action="">
+<form action="" method="get">
 	<p><span>菜名</span><input type="text" name = "food_name"></p>
 	<p><span>价格</span><input type="text" name="pirce"></p>
 	<input type="submit" value='sub' name='sub'>
 </form>
 
 <?php
+	if(isset($_GET['sub']))
+	{
+		print_r($_GET);
+	}
 	const DATAFILEFOLD ='./data';
 	const PREFIX_FOODID = 'food_id';
 	if(isset($_REQUEST['sub']))
@@ -26,15 +30,9 @@
 	
 	function read_foods($id='')
 	{
-		
-
-
 		$str = file_get_contents(DATAFILEFOLD.'/foods.txt');
-		
-		
+
 		// echo $str;
-
-
 		$food_arr = explode("\n", $str);
 
 		$res = array();
@@ -113,3 +111,7 @@
 		
 		echo $table;
 	}
+
+
+
+	
