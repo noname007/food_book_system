@@ -1,68 +1,101 @@
-<?php
-	
+ <?php
+	header("Content-type:text/html;charset=utf-8");
 	require_once "./httpRequest.php";
-	
+	require_once "./CMenuList.php";
 
-	$res =  httpRequest::get_method($test_url);
-	// file_put_contents('1', $res);
-	// $dom = new DOMDocument;
-	// if($dom->loadHTML($res))
-	// {
-	// 	var_dump($dom);
-	// }
-	// else
-	// {
-	// 	echo 'fail 2 load html';
-	// }
-	// preg_match_all('/^<li class(.|\n)*<\/li>$/', $res,$result);
-
-	// var_dump($result);
-	
-	class Order
+	class MenuData
 	{
+		private $url;
+		private $db;
 
-		private $test_url = "http://waimai.baidu.com/waimai/shop/18062509820316987430";
-		
-		function getData($test_url = 'http://waimai.baidu.com/waimai/shop/18062509820316987430')
+		function __construct($url = "http://waimai.baidu.com/waimai/shop/18062509820316987430",$menulistfile='')
 		{
-			$res =  httpRequest::get_method($test_url);
-			return $res;
+			$this->url = $url;
+			//model
+			$this->db = new CMenuList($menulistfile);
 		}
-
-		private function get_menu($res)
-		{
-			$result = array();
-			$li_len = 0;
-			$end = 0;	
-
-			while(~$end)
-			{
-				$res = substr($res,$end + $li_len);
-				$li_len = strlen('</li>');
-				$begin = str_match($res,'<li class');
-				if($begin!==false)
-				{
-					$end = str_match($res,'</li>');
-					if($end!== false)
-					{
-						$result[] = substr($res,$begin,$end+ $li_len - $begin);
-					}
-					// return $end;
-				}	
-			}
 			
+		//controller
+		public function run()
+		{
+			// echo '<pre>';
+			if(empty($this->url))
+			{
+				echo 'url 为空！<a href ="./admin.php"/> 重 填 </a>';
+				exit;
+			}
+
+			$data = $this->getBaiduWaimaiMenuList();
+			$this->db->insert($data);
+			$this->render($data);
+			// echo '</pre>';
+
+			// echo 1;
+		}
+		public function  get_menulist()
+		{
+			return $this->db->select();
+		}
+		//model
+		//food_id,food_name,pirce,img
+		private function getBaiduWaimaiMenuList()
+		{
+			$res =  httpRequest::get_method($this->url);
+
+<<<<<<< HEAD
+			while(~$end)
+=======
+			if($res==false)
+>>>>>>> 3a8d3ed5cb4b2231a1ed17394317b38c99189793
+			{
+				return array();
+			}
+
+			$imgs = array();
+			while($data_pos =strpos($res,'<li class="list-item" data="'))
+			{
+				//data
+				$data_pos +=strlen('<li class="list-item" data="');
+			    $res = substr($res, $data_pos);
+			    $id_pos = strpos($res,'" id');
+			    $menu_data= substr($res, 0, $id_pos);
+			    //img
+			    $data_src_pos = strpos($res,'data-src="')+ strlen('data-src="');
+			    $src_pos = strpos($res,'" src');
+			    $imgs[$menu_data] =  substr($res, $data_src_pos, $src_pos - $data_src_pos);
+			}
+
+			// print_r($imgs);
+			$menu = array();
+			foreach ($imgs as $data => $img) 
+			{
+				$info = explode('$', $data);
+				// print_r($info);
+				$menu[$info[0]]['food_id']=$info[0];
+				$menu[$info[0]]['food_name']=$info[1];
+				$menu[$info[0]]['price']=$info[2];
+				$menu[$info[0]]['img']=$img;
+			}
+			return $menu;
 		}
 
-		private function str_match(&$res, $pattern1)
+		//views
+		public function render($menulist)
 		{
-			$res_len = strlen($res);
-			// $pattern1 = '<li class';
-			// $pattern2 = '</li>';
-			$p_1 = strlen($pattern1);
-			// $p_2 = strlen($pattern2);
-
-			for($i = 0;$i < $res_len; ++$i)
+			$form = '<form method="post" action="Order.php">
+			<p>姓名<input type="text" name="username" value=""></p>
+			<p><input type="submit" name="sub" value="提交"></p>';
+			$form .= $this->add_menu_radio($menulist); 
+			$form.='</form>';
+			echo  $form;
+			return ;
+		}
+		private function add_menu_radio($menulist)
+		{
+			$res = '';
+			foreach ($menulist as $food)
 			{
+<<<<<<< HEAD
 				for( $j = 0; $j < $p_1; ++$j)
 				{
 					$k = $i;
@@ -85,5 +118,19 @@
 				}
 			}
 			return -1;
+=======
+				$res .= '<p><input type="radio" value="'.$food['food_id'].'" name="food_id"> | '.$food['food_name'].' | '.$food['price'].' RMB |<img src ="'.$food['img'].'</p>"/>';
+			}
+			return $res;
+>>>>>>> 3a8d3ed5cb4b2231a1ed17394317b38c99189793
 		}
+		//confg
+	}
+
+	$menu = new MenuData($_POST['url']);
+	if($_POST['sub'] === 'king')
+		$menu->run();
+	else
+	{
+		$menu->render($menu->get_menulist());
 	}
