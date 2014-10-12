@@ -35,7 +35,7 @@
 			$li_len = 0;
 			$end = 0;	
 
-			while($)
+			while(~$end)
 			{
 				$res = substr($res,$end + $li_len);
 				$li_len = strlen('</li>');
@@ -76,14 +76,14 @@
 					}
 					else if($k < $res_len)
 					{
-						return $i;
+						return -1;
 					}
 					else
 					{
-						return false;
+						return;
 					}
 				}
 			}
-			return $i;
+			return -1;
 		}
 	}
